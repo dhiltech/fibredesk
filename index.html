@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0b1220">
 <title>FibreDesk – Tickets</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg: #0b1220;
@@ -225,12 +225,170 @@ main { max-width: 760px; margin: 0 auto; padding: 16px 16px calc(96px + var(--sa
 #toast.show { opacity: 1; transform: translate(-50%, 0); }
 #toast.bad { background: var(--danger); color: #fff; }
 
+.lang-btn { border: 1px solid var(--line); background: var(--card); color: var(--text); border-radius: 999px; padding: 7px 14px; font-weight: 600; font-size: 14px; cursor: pointer; }
+:lang(ta) body { font-family: Inter, 'Noto Sans Tamil', system-ui, sans-serif; }
+:lang(ta) .status { letter-spacing: 0; }
+
 </style>
 </head>
 <body>
 <div id="app"></div>
 <div id="toast" role="status" aria-live="polite"></div>
 <div id="sheet-root"></div>
+<script>
+/* Tamil / English switch. Translates the rendered screen text, so app code stays in English. */
+(function () {
+  const TA = {
+    // auth
+    'Complaint & field service tracker': 'புகார் மற்றும் கள சேவை கண்காணிப்பு',
+    'Log in': 'உள்நுழை', 'Register': 'பதிவு செய்', 'Full name': 'முழு பெயர்', 'Mobile': 'மொபைல்',
+    'Username': 'பயனர் பெயர்', 'Password': 'கடவுச்சொல்', 'Create account': 'கணக்கை உருவாக்கு',
+    'Your password': 'உங்கள் கடவுச்சொல்', 'At least 6 characters': 'குறைந்தது 6 எழுத்துகள்',
+    'Forgot password?': 'கடவுச்சொல் மறந்துவிட்டதா?', 'Forgot password': 'கடவுச்சொல் மறந்துவிட்டது',
+    'Used to reset your password if you forget it.': 'கடவுச்சொல் மறந்தால் மீட்டமைக்க இது பயன்படும்.',
+    'New accounts are activated by an admin. The very first account becomes the admin.': 'புதிய கணக்குகளை நிர்வாகி அங்கீகரிப்பார். முதல் கணக்கு நிர்வாகியாகும்.',
+    'Account created. Ask your admin to approve it, then log in.': 'கணக்கு உருவாக்கப்பட்டது. நிர்வாகி அங்கீகரித்த பிறகு உள்நுழையவும்.',
+    'Enter your username and the mobile number you registered with, then choose a new password.': 'உங்கள் பயனர் பெயர் மற்றும் பதிவு செய்த மொபைல் எண்ணை உள்ளிட்டு, புதிய கடவுச்சொல்லைத் தேர்ந்தெடுக்கவும்.',
+    'Registered mobile number': 'பதிவு செய்த மொபைல் எண்', 'New password': 'புதிய கடவுச்சொல்',
+    'Repeat new password': 'புதிய கடவுச்சொல்லை மீண்டும் உள்ளிடவும்', 'Reset password': 'கடவுச்சொல்லை மீட்டமை',
+    'Save password': 'கடவுச்சொல்லைச் சேமி', 'Change password': 'கடவுச்சொல்லை மாற்று',
+    'Enter your new password.': 'புதிய கடவுச்சொல்லை உள்ளிடவும்.',
+    'No mobile number on your account? Ask your admin to reset it from the Team page.': 'உங்கள் கணக்கில் மொபைல் எண் இல்லையா? குழு பக்கத்தில் நிர்வாகியிடம் மீட்டமைக்கச் சொல்லுங்கள்.',
+    'Password changed': 'கடவுச்சொல் மாற்றப்பட்டது', 'Password changed. Log in with the new password.': 'கடவுச்சொல் மாற்றப்பட்டது. புதிய கடவுச்சொல்லுடன் உள்நுழையவும்.',
+    'Password must be at least 6 characters': 'கடவுச்சொல் குறைந்தது 6 எழுத்துகள் இருக்க வேண்டும்',
+    'The two passwords do not match': 'இரண்டு கடவுச்சொற்களும் பொருந்தவில்லை',
+    'Wrong username or password': 'தவறான பயனர் பெயர் அல்லது கடவுச்சொல்',
+    'Your account is waiting for admin approval': 'உங்கள் கணக்கு நிர்வாகி அங்கீகாரத்திற்காகக் காத்திருக்கிறது',
+    'Your account is disabled': 'உங்கள் கணக்கு முடக்கப்பட்டுள்ளது',
+    'That username is taken': 'இந்த பயனர் பெயர் ஏற்கனவே உள்ளது',
+    'Username and mobile number do not match': 'பயனர் பெயரும் மொபைல் எண்ணும் பொருந்தவில்லை',
+    'Too many attempts. Try again in an hour or ask your admin.': 'அதிக முயற்சிகள். ஒரு மணி நேரம் கழித்து முயற்சிக்கவும் அல்லது நிர்வாகியிடம் கேளுங்கள்.',
+    'Enter your full name': 'முழு பெயரை உள்ளிடவும்', 'Username: 3+ letters/numbers, no spaces': 'பயனர் பெயர்: 3+ எழுத்துகள்/எண்கள், இடைவெளி இல்லை',
+    'Please log in': 'உள்நுழையவும்',
+    // shell
+    'Tickets': 'டிக்கெட்டுகள்', 'My jobs': 'என் வேலைகள்', 'Team': 'குழு', 'Account': 'கணக்கு', 'Refresh': 'புதுப்பி',
+    'Complaints': 'புகார்கள்', 'Log out': 'வெளியேறு', 'Export all tickets (CSV / Excel)': 'அனைத்து டிக்கெட்டுகளையும் ஏற்றுமதி (CSV / Excel)',
+    // list
+    'Pending': 'நிலுவையில்', 'On site': 'தளத்தில்', 'Closed': 'மூடப்பட்டது', 'All': 'அனைத்தும்',
+    'Name, ID, mobile, area…': 'பெயர், ஐடி, மொபைல், பகுதி…',
+    'Today': 'இன்று', 'Yesterday': 'நேற்று', 'Last 7 days': 'கடந்த 7 நாட்கள்', 'All dates': 'அனைத்து தேதிகள்', 'Pick date…': 'தேதி தேர்வு…',
+    'No tickets here.': 'இங்கு டிக்கெட்டுகள் இல்லை.', 'Try another date or filter, or tap + to add one.': 'வேறு தேதி அல்லது வடிகட்டியை முயற்சிக்கவும், அல்லது புதியதைச் சேர்க்க + அழுத்தவும்.',
+    'Open': 'திறந்தது', 'Assigned': 'ஒதுக்கப்பட்டது', 'Working': 'வேலை நடக்கிறது',
+    // detail
+    'All tickets': 'அனைத்து டிக்கெட்டுகள்', 'Issue': 'பிரச்சனை', 'Address': 'முகவரி', 'Field engineer': 'கள பொறியாளர்',
+    'Not assigned': 'ஒதுக்கப்படவில்லை', 'Closing remarks': 'மூடும் குறிப்புகள்', 'Call': 'அழை', 'Directions': 'வழி', 'WhatsApp': 'WhatsApp',
+    'Field progress': 'கள முன்னேற்றம்', 'Logged': 'பதிவு', 'Arrived': 'வந்தடைந்தார்',
+    'Reached site': 'தளத்தை அடைந்தேன்', 'Start work': 'வேலையைத் தொடங்கு', 'Close ticket': 'டிக்கெட்டை மூடு',
+    'Reopen': 'மீண்டும் திற', 'Assign engineer': 'பொறியாளரை ஒதுக்கு', 'Reassign engineer': 'பொறியாளரை மாற்று',
+    'Take this job': 'இந்த வேலையை எடு', 'Photos': 'புகைப்படங்கள்', 'Take photo': 'புகைப்படம் எடு',
+    'Timeline': 'காலவரிசை', 'Note': 'குறிப்பு', 'Delete ticket': 'டிக்கெட்டை நீக்கு', 'GPS location': 'GPS இருப்பிடம்',
+    'logged the complaint': 'புகாரைப் பதிவு செய்தார்', 'assigned to': 'ஒதுக்கினார்:', 'reached the site': 'தளத்தை அடைந்தார்',
+    'started work': 'வேலையைத் தொடங்கினார்', 'closed the ticket': 'டிக்கெட்டை மூடினார்', 'reopened the ticket': 'டிக்கெட்டை மீண்டும் திறந்தார்',
+    'added a note': 'குறிப்பு சேர்த்தார்', 'added': 'சேர்த்தார்',
+    'Close ticket #': 'டிக்கெட்டை மூடு #', 'What was done?': 'என்ன செய்யப்பட்டது?',
+    'Completed': 'முடிந்தது', 'Adapter replaced': 'அடாப்டர் மாற்றப்பட்டது', 'Re-spliced': 'மீண்டும் இணைக்கப்பட்டது',
+    'Router reset': 'ரூட்டர் மீட்டமைப்பு', 'Cable replaced': 'கேபிள் மாற்றப்பட்டது', 'Customer not available': 'வாடிக்கையாளர் இல்லை',
+    'Proof photos (optional, camera only)': 'ஆதார புகைப்படங்கள் (விருப்பம், கேமரா மட்டும்)',
+    'e.g. Fiber re-spliced at pole, signal -19 dBm, internet working': 'எ.கா. கம்பத்தில் ஃபைபர் இணைக்கப்பட்டது, சிக்னல் -19 dBm, இணையம் வேலை செய்கிறது',
+    'Write what was done before closing.': 'மூடுவதற்கு முன் என்ன செய்யப்பட்டது என்று எழுதவும்.',
+    'Add closing remarks (what was done)': 'மூடும் குறிப்புகளைச் சேர்க்கவும் (என்ன செய்யப்பட்டது)',
+    'Add a note': 'குறிப்பு சேர்', 'Visible to everyone on this ticket.': 'இந்த டிக்கெட்டில் அனைவருக்கும் தெரியும்.',
+    'e.g. Customer not at home, will revisit at 5 PM': 'எ.கா. வாடிக்கையாளர் வீட்டில் இல்லை, மாலை 5 மணிக்கு மீண்டும் வருவேன்',
+    'Save note': 'குறிப்பைச் சேமி', 'Please write something.': 'ஏதாவது எழுதவும்.',
+    'Reopen ticket': 'டிக்கெட்டை மீண்டும் திற', 'Why is it being reopened?': 'ஏன் மீண்டும் திறக்கப்படுகிறது?',
+    'e.g. Customer called again, still no signal': 'எ.கா. வாடிக்கையாளர் மீண்டும் அழைத்தார், இன்னும் சிக்னல் இல்லை',
+    'Delete this ticket?': 'இந்த டிக்கெட்டை நீக்கவா?', 'This removes the ticket, its photos and history. It cannot be undone.': 'டிக்கெட், புகைப்படங்கள் மற்றும் வரலாறு நீக்கப்படும். இதைத் திரும்பப் பெற முடியாது.',
+    'Delete': 'நீக்கு', 'Cancel': 'ரத்து', 'Close': 'மூடு', 'Save': 'சேமி',
+    'Call customer': 'வாடிக்கையாளரை அழை',
+    // new ticket
+    'New complaint': 'புதிய புகார்', 'Log a customer issue. Engineers see it immediately.': 'வாடிக்கையாளர் பிரச்சனையைப் பதிவு செய்யவும். பொறியாளர்கள் உடனே பார்ப்பார்கள்.',
+    'Customer name / User ID': 'வாடிக்கையாளர் பெயர் / பயனர் ஐடி', 'Address / Location': 'முகவரி / இடம்', 'Mobile number': 'மொபைல் எண்',
+    'Assign to (optional)': 'ஒதுக்கு (விருப்பம்)', 'Not yet': 'இப்போது இல்லை', 'Photo (optional, camera only)': 'புகைப்படம் (விருப்பம், கேமரா மட்டும்)',
+    'Submit complaint': 'புகாரைச் சமர்ப்பி', 'Fill in all four fields': 'நான்கு புலங்களையும் நிரப்பவும்', 'Mobile number looks wrong': 'மொபைல் எண் தவறாக உள்ளது',
+    'Loss light': 'லாஸ் லைட்', 'No internet': 'இணையம் இல்லை', 'Slow speed': 'மெதுவான வேகம்', 'Frequent disconnection': 'அடிக்கடி துண்டிப்பு',
+    'Adapter': 'அடாப்டர்', 'Wire cut': 'வயர் வெட்டு', 'Router config': 'ரூட்டர் அமைப்பு', 'New connection': 'புதிய இணைப்பு',
+    // toasts
+    'Ticket closed': 'டிக்கெட் மூடப்பட்டது', 'Work started': 'வேலை தொடங்கியது', 'Engineer assigned': 'பொறியாளர் ஒதுக்கப்பட்டார்',
+    'Job assigned to you': 'வேலை உங்களுக்கு ஒதுக்கப்பட்டது', 'Photo uploaded': 'புகைப்படம் பதிவேற்றப்பட்டது', 'Photo deleted': 'புகைப்படம் நீக்கப்பட்டது',
+    'Ticket deleted': 'டிக்கெட் நீக்கப்பட்டது', 'Saved': 'சேமிக்கப்பட்டது', 'Only new camera photos are allowed': 'புதிய கேமரா புகைப்படங்கள் மட்டுமே அனுமதி',
+    'Saving…': 'சேமிக்கிறது…',
+    // team
+    'Waiting for approval': 'அங்கீகாரத்திற்காகக் காத்திருக்கிறது', 'Team members': 'குழு உறுப்பினர்கள்', 'Approve': 'அங்கீகரி', 'Reject': 'நிராகரி',
+    'engineer': 'பொறியாளர்', 'staff': 'அலுவலக ஊழியர்', 'admin': 'நிர்வாகி', 'enable': 'இயக்கு', 'disable': 'முடக்கு', 'reset password': 'கடவுச்சொல் மீட்டமை',
+    'Roles:': 'பதவிகள்:', 'updates field jobs ·': 'கள வேலைகளைப் புதுப்பிப்பார் ·', 'logs and assigns tickets ·': 'டிக்கெட்டுகளைப் பதிவு செய்து ஒதுக்குவார் ·',
+    'also approves accounts and deletes tickets.': 'கணக்குகளை அங்கீகரித்து டிக்கெட்டுகளை நீக்கவும் முடியும்.',
+    'disabled': 'முடக்கப்பட்டது',
+  };
+  const PATTERNS = [
+    [/^#(\d+) · logged (.+?) by (.+)$/, '#$1 · $3 பதிவு செய்தார் · $2'],
+    [/^Ticket #(\d+) created$/, 'டிக்கெட் #$1 உருவாக்கப்பட்டது'],
+    [/^Ticket #(\d+)$/, 'டிக்கெட் #$1'],
+    [/^Close ticket #(\d+)$/, 'டிக்கெட் #$1 ஐ மூடு'],
+    [/^Arrival marked at (.+)$/, '$1 மணிக்கு வருகை பதிவு செய்யப்பட்டது'],
+    [/^(\d+) photo\(s\) taken · tap for another$/, '$1 புகைப்படம் எடுக்கப்பட்டது · மேலும் எடுக்க அழுத்தவும்'],
+    [/^Uploading (\d+) photo\(s\)…$/, '$1 புகைப்படம் பதிவேற்றுகிறது…'],
+    [/^added (\d+) photos?(.*)$/, '$1 புகைப்படம் சேர்த்தார்$2'],
+    [/^Total (.+)$/, 'மொத்தம் $1'],
+    [/^(.*)just now(.*)$/, '$1இப்போது$2'],
+    [/^(.*?)(\d+) min ago(.*)$/, '$1$2 நிமிடம் முன்$3'],
+    [/^(.*?)(\d+) h ago(.*)$/, '$1$2 மணி நேரம் முன்$3'],
+    [/^Assigned to (.+)\. Only they or office staff can update this job\.$/, '$1 க்கு ஒதுக்கப்பட்டது. அவர் அல்லது அலுவலக ஊழியர் மட்டுமே புதுப்பிக்க முடியும்.'],
+    [/^This job is assigned to (.+)$/, 'இந்த வேலை $1 க்கு ஒதுக்கப்பட்டது'],
+    [/^Who should attend #(\d+)\?$/, '#$1 க்கு யார் செல்ல வேண்டும்?'],
+  ];
+
+  let lang = 'en';
+  try { lang = localStorage.getItem('fd-lang') || 'en'; } catch {}
+
+  function tr(text) {
+    if (lang !== 'ta' || !text) return text;
+    const m = text.match(/^(\s*)([\s\S]*?)(\s*)$/); const core = m[2];
+    if (!core) return text;
+    if (TA[core]) return m[1] + TA[core] + m[3];
+    let out = core;
+    for (const [re, rep] of PATTERNS) if (re.test(out)) out = out.replace(re, rep);
+    return out === core ? text : m[1] + out + m[3];
+  }
+  const ATTRS = ['placeholder', 'aria-label', 'title', 'alt'];
+  function walk(root) {
+    if (lang !== 'ta' || !root) return;
+    if (root.nodeType === 3) { const t = tr(root.nodeValue); if (t !== root.nodeValue) root.nodeValue = t; return; }
+    if (root.nodeType !== 1 || root.tagName === 'SCRIPT' || root.tagName === 'STYLE' || root.tagName === 'TEXTAREA') return;
+    for (const a of ATTRS) if (root.hasAttribute && root.hasAttribute(a)) { const v = root.getAttribute(a); const t = tr(v); if (t !== v) root.setAttribute(a, t); }
+    for (const c of root.childNodes) walk(c);
+  }
+  let busy = false;
+  const obs = new MutationObserver((muts) => {
+    if (busy || lang !== 'ta') return;
+    busy = true;
+    for (const m of muts) {
+      if (m.type === 'characterData') walk(m.target);
+      else m.addedNodes.forEach(walk);
+    }
+    busy = false;
+  });
+  function start() {
+    document.documentElement.lang = lang;
+    walk(document.body);
+    obs.observe(document.body, { childList: true, subtree: true, characterData: true });
+  }
+  if (document.body) start(); else document.addEventListener('DOMContentLoaded', start);
+
+  window.I18N = {
+    get lang() { return lang; },
+    t: tr,
+    button() {
+      return `<button type="button" class="lang-btn" onclick="I18N.toggle()">${lang === 'ta' ? 'English' : 'தமிழ்'}</button>`;
+    },
+    toggle() {
+      lang = lang === 'ta' ? 'en' : 'ta';
+      try { localStorage.setItem('fd-lang', lang); } catch {}
+      location.reload();
+    },
+  };
+})();
+
+</script>
 <script>
 // Supabase settings. Leave empty to use the built-in Node.js server instead.
 // The anon key is designed to be public; security comes from the database rules in supabase/schema.sql.
@@ -336,6 +494,12 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
         return { pending: true };
       }
       if (p === '/api/logout') { await sb.auth.signOut(); return { ok: true }; }
+      if (p === '/api/reset') {
+        const { data, error } = await sb.rpc('reset_password_self', { p_username: String(b.username || ''), p_mobile: String(b.mobile || ''), p_new: String(b.password || '') });
+        if (error) throw error;
+        if (data !== 'ok') return fail(400, data || 'Could not reset password');
+        return { ok: true };
+      }
 
       const me = await myProfile();
       if (!me || me.status !== 'active') return fail(401, 'Please log in');
@@ -346,6 +510,14 @@ Resources:`;for(let t of c){if(!t||typeof t!=`string`)throw Error(`@supabase/aut
         if (error) throw error;
         data.sort((a, z) => (z.status === 'pending') - (a.status === 'pending'));
         return { users: data.filter((u) => mgr || u.status === 'active').map(pub) };
+      }
+      if (p === '/api/password') {
+        const { error } = await sb.auth.updateUser({ password: String(b.password || '') });
+        if (error) throw error; return { ok: true };
+      }
+      if ((m = p.match(/^\/api\/users\/([\w-]+)\/password$/))) {
+        const { error } = await sb.rpc('admin_reset_password', { p_id: m[1], p_new: String(b.password || '') });
+        if (error) throw error; return { ok: true };
       }
       if ((m = p.match(/^\/api\/users\/([\w-]+)$/)) && method === 'PATCH') {
         const { error } = await sb.rpc('admin_update_user', { p_id: m[1], p_role: b.role || null, p_status: b.status || null });
@@ -598,20 +770,23 @@ function shell(title, body, active, extraTop = '') {
 function renderAuth(mode = 'login', msg = '') {
   $('#app').innerHTML = `
   <div class="auth"><div class="auth-card">
-    <div class="logo"><div class="logo-mark">${icon('logo')}</div><div><h1>FiberDesk</h1><p>Complaint &amp; field service tracker</p></div></div>
+    <div style="display:flex;justify-content:flex-end;margin-bottom:8px">${window.I18N ? I18N.button() : ''}</div>
+    <div class="logo"><div class="logo-mark">${icon('logo')}</div><div><h1>FibreDesk</h1><p>Complaint &amp; field service tracker</p></div></div>
     ${window.DEMO ? window.DEMO.loginHint : ''}<div class="tabs"><button data-m="login" class="${mode === 'login' ? 'on' : ''}">Log in</button><button data-m="register" class="${mode === 'register' ? 'on' : ''}">Register</button></div>
     <form id="auth-form" autocomplete="on" novalidate>
       ${mode === 'register' ? `
         <div class="field"><label for="f-name">Full name</label><div class="input-icon">${icon('user')}<input class="input" id="f-name" name="name" autocomplete="name" placeholder="e.g. Kaja Mohideen" required></div></div>
-        <div class="field"><label for="f-phone">Mobile</label><div class="input-icon">${icon('phone')}<input class="input" id="f-phone" name="phone" inputmode="tel" autocomplete="tel" placeholder="e.g. 9876543210"></div></div>` : ''}
+        <div class="field"><label for="f-phone">Mobile</label><div class="input-icon">${icon('phone')}<input class="input" id="f-phone" name="phone" inputmode="tel" autocomplete="tel" placeholder="e.g. 9876543210" required></div><div class="note" style="margin-top:4px">Used to reset your password if you forget it.</div></div>` : ''}
       <div class="field"><label for="f-user">Username</label><div class="input-icon">${icon('user')}<input class="input" id="f-user" name="username" autocapitalize="none" autocomplete="username" placeholder="e.g. kaja" required></div></div>
       <div class="field"><label for="f-pass">Password</label><div class="input-icon">${icon('lock')}<input class="input" id="f-pass" name="password" type="password" autocomplete="${mode === 'login' ? 'current-password' : 'new-password'}" placeholder="${mode === 'login' ? 'Your password' : 'At least 6 characters'}" required></div></div>
       <div class="err" id="auth-err">${esc(msg)}</div>
       <button class="btn btn-primary btn-block" type="submit">${mode === 'login' ? 'Log in' : 'Create account'}</button>
+      ${mode === 'login' ? `<button type="button" class="btn btn-ghost btn-block" id="forgot" style="margin-top:10px;background:none;border:0;color:var(--brand)">Forgot password?</button>` : ''}
       ${mode === 'register' ? '<p class="note" style="margin-top:12px">New accounts are activated by an admin. The very first account becomes the admin.</p>' : ''}
     </form>
   </div></div>`;
   document.querySelectorAll('[data-m]').forEach((b) => b.onclick = () => renderAuth(b.dataset.m));
+  if ($('#forgot')) $('#forgot').onclick = openForgot;
   $('#auth-form').onsubmit = async (e) => {
     e.preventDefault();
     const btn = e.target.querySelector('button[type=submit]'); btn.disabled = true;
@@ -1002,9 +1177,44 @@ function openAccount() {
   openSheet(`<div style="display:flex;align-items:center;gap:12px;margin-bottom:18px"><div class="avatar" style="width:48px;height:48px;font-size:17px">${esc(initials(u.name))}</div>
     <div><h3>${esc(u.name)}</h3><div class="note">@${esc(u.username)} · ${esc(u.role)}</div></div></div>
     ${isManager() && !window.DEMO ? `<a class="btn btn-ghost btn-block" style="margin-bottom:8px" href="/api/export.csv">${icon('dl')}Export all tickets (CSV / Excel)</a>` : ''}${isManager() && window.DEMO?.exportCsv ? `<button class="btn btn-ghost btn-block" style="margin-bottom:8px" id="exp">${icon('dl')}Export all tickets (CSV / Excel)</button>` : ''}
+    ${window.I18N ? `<div style="margin-bottom:8px">${I18N.button().replace('class="lang-btn"', 'class="btn btn-ghost btn-block"')}</div>` : ''}
+    <button class="btn btn-ghost btn-block" style="margin-bottom:8px" id="chpw">${icon('lock')}Change password</button>
     <button class="btn btn-danger btn-block" id="lo">${icon('logout')}Log out</button>`);
+  $('#chpw').onclick = () => passwordSheet('Change password', 'Enter your new password.', (pw) => api('/api/password', { method: 'POST', body: { password: pw } }));
   if ($('#exp')) $('#exp').onclick = () => window.DEMO.exportCsv().catch((e) => toast(e.message, true));
   $('#lo').onclick = async () => { await api('/api/logout', { method: 'POST' }).catch(() => {}); state.user = null; location.hash = ''; render(); };
+}
+
+function passwordSheet(title, sub, fn) {
+  openSheet(`<h3>${esc(title)}</h3><p class="sub">${esc(sub)}</p>
+    <div class="field"><label for="pw1">New password</label><div class="input-icon">${icon('lock')}<input class="input" id="pw1" type="password" autocomplete="new-password" placeholder="At least 6 characters"></div></div>
+    <div class="field"><label for="pw2">Repeat new password</label><div class="input-icon">${icon('lock')}<input class="input" id="pw2" type="password" autocomplete="new-password"></div></div>
+    <div class="err" id="pw-err"></div><button class="btn btn-primary btn-block" id="pw-go">Save password</button>`);
+  $('#pw-go').onclick = async (e) => {
+    const a = $('#pw1').value, b = $('#pw2').value;
+    if (a.length < 6) { $('#pw-err').textContent = 'Password must be at least 6 characters'; return; }
+    if (a !== b) { $('#pw-err').textContent = 'The two passwords do not match'; return; }
+    e.target.disabled = true;
+    try { await fn(a); closeSheet(); toast('Password changed'); } catch (err) { $('#pw-err').textContent = err.message; e.target.disabled = false; }
+  };
+}
+
+function openForgot() {
+  openSheet(`<h3>Forgot password</h3><p class="sub">Enter your username and the mobile number you registered with, then choose a new password.</p>
+    <div class="field"><label for="fg-u">Username</label><div class="input-icon">${icon('user')}<input class="input" id="fg-u" autocapitalize="none" placeholder="e.g. kaja"></div></div>
+    <div class="field"><label for="fg-m">Registered mobile number</label><div class="input-icon">${icon('phone')}<input class="input" id="fg-m" inputmode="tel" placeholder="e.g. 9876543210"></div></div>
+    <div class="field"><label for="fg-p">New password</label><div class="input-icon">${icon('lock')}<input class="input" id="fg-p" type="password" autocomplete="new-password" placeholder="At least 6 characters"></div></div>
+    <div class="err" id="fg-err"></div><button class="btn btn-primary btn-block" id="fg-go">Reset password</button>
+    <p class="note" style="margin-top:12px">No mobile number on your account? Ask your admin to reset it from the Team page.</p>`);
+  $('#fg-go').onclick = async (e) => {
+    const body = { username: $('#fg-u').value, mobile: $('#fg-m').value, password: $('#fg-p').value };
+    if (body.password.length < 6) { $('#fg-err').textContent = 'Password must be at least 6 characters'; return; }
+    e.target.disabled = true;
+    try {
+      await api('/api/reset', { method: 'POST', body }); closeSheet(); toast('Password changed. Log in with the new password.');
+      if ($('#f-user')) $('#f-user').value = body.username.trim().toLowerCase();
+    } catch (err) { $('#fg-err').textContent = err.message; e.target.disabled = false; }
+  };
 }
 
 // ---------- team ----------
@@ -1018,7 +1228,7 @@ async function renderUsers() {
       <div class="avatar">${esc(initials(u.name))}</div>
       <div class="who"><b>${esc(u.name)}${u.status === 'disabled' ? '<span class="tag">disabled</span>' : ''}</b><small>@${esc(u.username)}${u.phone ? ' · ' + esc(u.phone) : ''}</small></div>
       ${u.status === 'pending' && admin ? `<button class="btn btn-ok btn-sm" data-approve="${u.id}">Approve</button><button class="btn btn-danger btn-sm" data-reject="${u.id}">Reject</button>` :
-        admin && u.id !== state.user.id ? `<select class="select" data-role="${u.id}">${['engineer', 'staff', 'admin'].map((r) => `<option ${u.role === r ? 'selected' : ''} value="${r}">${r}</option>`).join('')}<option value="__disable">${u.status === 'disabled' ? 'enable' : 'disable'}</option></select>` :
+        admin && u.id !== state.user.id ? `<select class="select" data-role="${u.id}">${['engineer', 'staff', 'admin'].map((r) => `<option ${u.role === r ? 'selected' : ''} value="${r}">${r}</option>`).join('')}<option value="__disable">${u.status === 'disabled' ? 'enable' : 'disable'}</option><option value="__pw">reset password</option></select>` :
         `<span class="note">${esc(u.role)}</span>`}
     </div>`;
   $('#main').innerHTML = `
@@ -1030,6 +1240,7 @@ async function renderUsers() {
   document.querySelectorAll('[data-reject]').forEach((b) => b.onclick = () => patch(b.dataset.reject, { status: 'disabled' }));
   document.querySelectorAll('[data-role]').forEach((s) => s.onchange = () => {
     const u = users.find((x) => x.id == s.dataset.role);
+    if (s.value === '__pw') { s.value = u.role; passwordSheet('Reset password', `Set a new password for ${u.name} (@${u.username}). Tell them the new password.`, (pw) => api('/api/users/' + u.id + '/password', { method: 'POST', body: { password: pw } })); return; }
     if (s.value === '__disable') patch(u.id, { status: u.status === 'disabled' ? 'active' : 'disabled' });
     else patch(u.id, { role: s.value });
   });
