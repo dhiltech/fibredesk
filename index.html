@@ -168,7 +168,7 @@ main { max-width: 760px; margin: 0 auto; padding: 16px 16px calc(96px + var(--sa
 .kv svg { width: 18px; height: 18px; color: var(--faint); margin-top: 2px; }
 .kv .v { font-size: 15px; }
 .kv .v small { display: block; color: var(--muted); font-size: 12px; }
-.quick { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 14px; }
+.quick { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 14px; }
 .quick .btn { padding: 9px 4px; gap: 5px; font-size: 12.5px; flex-direction: column; }
 
 /* progress stepper */
@@ -279,6 +279,29 @@ main { max-width: 760px; margin: 0 auto; padding: 16px 16px calc(96px + var(--sa
 .track .big { font-size: 20px; font-weight: 700; margin: 6px 0 2px; }
 .lightbox.full.zoom .lb-img { display: block; }
 
+/* ---------- layout safety for long (Tamil) labels ---------- */
+html, body { overflow-x: hidden; }
+.stats { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.stat span { display: block; overflow-wrap: break-word; line-height: 1.25; }
+.steps { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.step b, .step small { overflow-wrap: break-word; line-height: 1.25; }
+.bottomnav button { min-width: 0; text-align: center; line-height: 1.15; overflow-wrap: break-word; }
+.btn { max-width: 100%; }
+.sheet { max-width: min(560px, 100%); }
+.sheet .btn-block, .actionbox .btn, .sms-row .btn { white-space: normal; text-align: center; line-height: 1.3; }
+:lang(ta) .btn { white-space: normal; text-align: center; line-height: 1.3; }
+:lang(ta) .bottomnav button { font-size: 9.5px; letter-spacing: -.01em; }
+:lang(ta) .stat span { font-size: 10.5px; }
+:lang(ta) .step b { font-size: 10px; }
+:lang(ta) .steps { gap: 2px; }
+:lang(ta) .pill { font-size: 12.5px; }
+:lang(ta) .sheet h3 { font-size: 17px; }
+:lang(ta) .panel h4 { letter-spacing: 0; }
+:lang(ta) .quick .btn { font-size: 12px; }
+.sms-or { text-align: center; color: var(--muted); font-size: 12.5px; margin: 4px 0 0; }
+.btn-next { animation: pulse 1.2s ease-in-out infinite; }
+@keyframes pulse { 50% { box-shadow: 0 0 0 6px #34d39944; } }
+
 </style>
 </head>
 <body>
@@ -328,7 +351,7 @@ main { max-width: 760px; margin: 0 auto; padding: 16px 16px calc(96px + var(--sa
     'Tracking link copied': 'கண்காணிப்பு இணைப்பு நகலெடுக்கப்பட்டது', 'Engineer assigned': 'பொறியாளர் ஒதுக்கப்பட்டார்',
     'Tap a button: Messages opens with the text ready, then press Send. It goes from your own SIM.': 'பொத்தானை அழுத்தவும்: செய்தி தயாராக Messages திறக்கும், பிறகு Send அழுத்தவும். உங்கள் சொந்த SIM மூலம் செல்லும்.',
     'No engineer assigned yet. Assign one to send the job by SMS.': 'இன்னும் பொறியாளர் ஒதுக்கப்படவில்லை. SMS அனுப்ப ஒருவரை ஒதுக்கவும்.',
-    'Registered': 'பதிவு செய்யப்பட்டது', 'Engineer reached': 'பொறியாளர் வந்தார்', 'Work started': 'வேலை தொடங்கியது', 'Resolved': 'சரி செய்யப்பட்டது',
+    'Registered': 'பதிவு', 'Engineer arrived': 'வருகை', 'In progress': 'பணியில்', 'Resolved': 'தீர்ந்தது',
     'Engineer assigned': 'பொறியாளர் ஒதுக்கப்பட்டார்', 'Engineer at your location': 'பொறியாளர் உங்கள் இடத்தில் உள்ளார்', 'Work in progress': 'வேலை நடைபெறுகிறது',
     'Your engineer': 'உங்கள் பொறியாளர்', 'Refresh': 'புதுப்பி', 'Refreshed': 'புதுப்பிக்கப்பட்டது',
     'Tracking link not found. Please check the link in your SMS.': 'கண்காணிப்பு இணைப்பு கிடைக்கவில்லை. SMS இல் உள்ள இணைப்பைச் சரிபார்க்கவும்.',
@@ -340,21 +363,21 @@ main { max-width: 760px; margin: 0 auto; padding: 16px 16px calc(96px + var(--sa
     'This needs the latest database update (update-2 SQL)': 'இதற்கு சமீபத்திய தரவுத்தள புதுப்பிப்பு தேவை (update-2 SQL)',
     'You can only edit tickets you created or are assigned to': 'நீங்கள் உருவாக்கிய அல்லது உங்களுக்கு ஒதுக்கப்பட்ட டிக்கெட்டுகளை மட்டுமே திருத்தலாம்',
     'Only new camera photos are allowed': 'புதிய கேமரா புகைப்படங்கள் மட்டுமே அனுமதிக்கப்படும்',
-    'Zoom': 'பெரிதாக்கு', 'Field engineer': 'கள பொறியாளர்', 'Office staff': 'அலுவலக ஊழியர்', 'Admin': 'நிர்வாகி',
+    'Zoom': 'பெரிதாக்கு', 'Send both SMS': 'இரண்டு SMS-ம் அனுப்பு', 'or send one at a time': 'அல்லது ஒவ்வொன்றாக அனுப்பவும்', 'Next: SMS field engineer': 'அடுத்து: கள பொறியாளருக்கு SMS', 'Both SMS opened': 'இரண்டு SMS-ம் திறக்கப்பட்டது', 'Field engineer': 'கள பொறியாளர்', 'Office staff': 'அலுவலக ஊழியர்', 'Admin': 'நிர்வாகி',
     'attends complaints and updates field jobs ·': 'புகார்களுக்குச் சென்று கள வேலைகளைப் புதுப்பிப்பார் ·', 'logs and assigns tickets': 'டிக்கெட்டுகளைப் பதிவு செய்து ஒதுக்குவார்', 'also approves accounts and deletes tickets.': 'கணக்குகளை அங்கீகரித்து டிக்கெட்டுகளை நீக்குவார்.', 'This mobile already has an open ticket': 'இந்த மொபைலுக்கு ஏற்கனவே திறந்த டிக்கெட் உள்ளது',
     // shell
     'Tickets': 'டிக்கெட்டுகள்', 'My jobs': 'என் வேலைகள்', 'Team': 'குழு', 'Account': 'கணக்கு', 'Refresh': 'புதுப்பி',
     'Complaints': 'புகார்கள்', 'Log out': 'வெளியேறு', 'Export all tickets (CSV / Excel)': 'அனைத்து டிக்கெட்டுகளையும் ஏற்றுமதி (CSV / Excel)',
     // list
-    'Pending': 'நிலுவையில்', 'On site': 'தளத்தில்', 'Closed': 'மூடப்பட்டது', 'All': 'அனைத்தும்',
+    'Pending': 'நிலுவை', 'On site': 'தளத்தில்', 'Closed': 'மூடியது', 'All': 'மொத்தம்',
     'Name, ID, mobile, area…': 'பெயர், ஐடி, மொபைல், பகுதி…',
     'Today': 'இன்று', 'Yesterday': 'நேற்று', 'Last 7 days': 'கடந்த 7 நாட்கள்', 'All dates': 'அனைத்து தேதிகள்', 'Pick date…': 'தேதி தேர்வு…',
     'No tickets here.': 'இங்கு டிக்கெட்டுகள் இல்லை.', 'Try another date or filter, or tap + to add one.': 'வேறு தேதி அல்லது வடிகட்டியை முயற்சிக்கவும், அல்லது புதியதைச் சேர்க்க + அழுத்தவும்.',
-    'Open': 'திறந்தது', 'Assigned': 'ஒதுக்கப்பட்டது', 'Working': 'வேலை நடக்கிறது',
+    'Open': 'திறந்தது', 'Assigned': 'ஒதுக்கப்பட்டது', 'Working': 'பணியில்',
     // detail
     'All tickets': 'அனைத்து டிக்கெட்டுகள்', 'Issue': 'பிரச்சனை', 'Address': 'முகவரி', 'Field engineer': 'கள பொறியாளர்',
     'Not assigned': 'ஒதுக்கப்படவில்லை', 'Closing remarks': 'மூடும் குறிப்புகள்', 'Call': 'அழை', 'Directions': 'வழி', 'WhatsApp': 'WhatsApp',
-    'Field progress': 'கள முன்னேற்றம்', 'Logged': 'பதிவு', 'Arrived': 'வந்தடைந்தார்',
+    'Field progress': 'கள முன்னேற்றம்', 'Logged': 'பதிவு', 'Arrived': 'வருகை',
     'Reached site': 'தளத்தை அடைந்தேன்', 'Start work': 'வேலையைத் தொடங்கு', 'Close ticket': 'டிக்கெட்டை மூடு',
     'Reopen': 'மீண்டும் திற', 'Assign engineer': 'பொறியாளரை ஒதுக்கு', 'Reassign engineer': 'பொறியாளரை மாற்று',
     'Take this job': 'இந்த வேலையை எடு', 'Photos': 'புகைப்படங்கள்', 'Take photo': 'புகைப்படம் எடு',
@@ -1095,12 +1118,33 @@ async function engineerOf(t) {
 function smsSheet(t, eng, title) {
   openSheet(`<h3>${esc(title || 'Send SMS')}</h3><p class="sub">Tap a button: Messages opens with the text ready, then press Send. It goes from your own SIM.</p>
     <div class="sms-row">
+      ${eng?.phone ? `<button class="btn btn-ok btn-block" id="sms-both">${icon('sms')}Send both SMS</button><p class="sms-or">or send one at a time</p>` : ''}
       <a class="btn btn-primary btn-block" href="${smsHref(t.mobile, customerSms(t, eng))}">${icon('sms')}SMS customer · ${esc(t.mobile)}</a>
       ${eng ? (eng.phone ? `<a class="btn btn-info btn-block" href="${smsHref(eng.phone, engineerSms(t))}">${icon('sms')}SMS engineer · ${esc(eng.name)}</a>` : `<p class="note">${esc(eng.name)} has no mobile number saved, so no SMS to the engineer.</p>`) : '<p class="note">No engineer assigned yet. Assign one to send the job by SMS.</p>'}
       ${trackUrl(t) ? `<button class="btn btn-ghost btn-block" id="cp-track">${icon('nav')}Copy tracking link</button>` : ''}
       <button class="btn btn-ghost btn-block" id="sms-done">Done</button>
     </div>`);
   $('#sms-done').onclick = closeSheet;
+  // One button for both: opens Messages for the customer; when you come back it opens the field engineer's SMS
+  const both = $('#sms-both');
+  if (both) {
+    const custH = smsHref(t.mobile, customerSms(t, eng)), engH = smsHref(eng.phone, engineerSms(t));
+    let stage = 0;
+    const toEngineer = () => {
+      if (stage !== 1 || !document.contains(both)) return;
+      stage = 2; location.href = engH;
+      both.className = 'btn btn-ghost btn-block'; both.innerHTML = `${icon('check')}Both SMS opened`;
+    };
+    both.onclick = () => {
+      if (stage === 0) {
+        stage = 1; location.href = custH;
+        both.className = 'btn btn-ok btn-block btn-next'; both.innerHTML = `${icon('sms')}Next: SMS field engineer`;
+      } else if (stage === 1) toEngineer();
+      else { stage = 0; both.click(); }
+    };
+    const onBack = () => { if (!document.contains(both)) return document.removeEventListener('visibilitychange', onBack); if (document.visibilityState === 'visible') setTimeout(toEngineer, 700); };
+    document.addEventListener('visibilitychange', onBack);
+  }
   if ($('#cp-track')) $('#cp-track').onclick = async () => toast((await copyText(trackUrl(t))) ? 'Tracking link copied' : trackUrl(t));
 }
 function copyText(txt) {
@@ -1181,7 +1225,6 @@ async function renderDetail(id) {
         ${callLink(t.mobile, 'btn btn-ghost btn-sm')}
         <a class="btn btn-ghost btn-sm" target="_blank" rel="noopener" href="https://wa.me/${waNum(t.mobile)}">${icon('msg')}WhatsApp</a>
         <button class="btn btn-ghost btn-sm" id="sms-btn">${icon('sms')}SMS</button>
-        <a class="btn btn-ghost btn-sm" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(t.address)}">${icon('nav')}Directions</a>
       </div>
     </section>
 
@@ -1568,7 +1611,7 @@ async function renderTrack(token) {
   let t;
   try { t = (await api('/api/track/' + encodeURIComponent(token))).ticket; }
   catch (e) { $('#tr-body').innerHTML = `<section class="panel"><div class="empty">${icon('alert')}<div>${esc(e.message)}</div></div></section>`; return; }
-  const steps = [['Registered', t.created_at, 'ticket'], ['Engineer reached', t.arrived_at, 'pin'], ['Work started', t.started_at, 'wrench'], ['Resolved', t.closed_at, 'flag']];
+  const steps = [['Registered', t.created_at, 'ticket'], ['Engineer arrived', t.arrived_at, 'pin'], ['In progress', t.started_at, 'wrench'], ['Resolved', t.closed_at, 'flag']];
   const cur = steps.findIndex((x) => !x[1]);
   const label = { open: 'Registered', assigned: 'Engineer assigned', on_site: 'Engineer at your location', in_progress: 'Work in progress', closed: 'Resolved' }[t.status] || t.status;
   $('#tr-body').innerHTML = `<section class="panel">
